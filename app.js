@@ -173,24 +173,41 @@
     return d;
   }
 
+  /* Fact-or-myth dispatches: C.myths is a list of cards; each card says whether the answer is "fact" or "myth". */
+  var mythIndex = 0;
   function renderMyth() {
+    var cards = (C.myths && C.myths.length) ? C.myths : [C.myth];
+    if (mythIndex >= cards.length) mythIndex = 0;
+    var card = cards[mythIndex], answer = card.answer === 'fact' ? 'fact' : 'myth';
     var root = $('#myth');
     root.classList.remove('revealed');
-    root.innerHTML = '<h2 class="myth-title"></h2><blockquote class="myth-quote"></blockquote>' +
+    root.innerHTML = '<h2 class="myth-title"></h2><p class="myth-count"></p><blockquote class="myth-quote"></blockquote>' +
       '<div class="myth-guess"><button type="button" class="btn stamp-btn" data-guess="fact"></button>' +
       '<button type="button" class="btn stamp-btn" data-guess="myth"></button></div>' +
-      '<span class="stamp red myth-verdict"></span><p class="myth-result"></p><p class="myth-text"></p>';
+      '<span class="stamp myth-verdict"></span><p class="myth-result"></p><p class="myth-text"></p>' +
+      '<button type="button" class="btn myth-next"></button>';
     $('.myth-title', root).textContent = LF.ui('mythTitle');
-    $('.myth-quote', root).textContent = LF.text(C.myth.quote);
+    $('.myth-count', root).textContent = LF.ui('mythCount', { n: mythIndex + 1, total: cards.length });
+    $('.myth-quote', root).textContent = LF.text(card.quote);
     $('[data-guess="fact"]', root).textContent = LF.ui('factStamp');
-    $('[data-guess="myth"]', root).textContent = LF.text(C.myth.verdict);
-    $('.myth-verdict', root).textContent = LF.text(C.myth.verdict);
+    $('[data-guess="myth"]', root).textContent = C.ui.mythStamp ? LF.ui('mythStamp') : LF.text(card.verdict);
+    var verdict = $('.myth-verdict', root);
+    verdict.textContent = LF.text(card.verdict);
+    verdict.classList.add(answer === 'myth' ? 'red' : 'blue');
+    var next = $('.myth-next', root);
+    next.textContent = LF.ui('mythNext');
+    next.hidden = cards.length < 2;
+    next.onclick = function () {
+      mythIndex = (mythIndex + 1) % cards.length;
+      renderMyth();
+      $('[data-guess="fact"]', root).focus();
+    };
     root.querySelectorAll('[data-guess]').forEach(function (b) {
       b.onclick = function () {
-        var ok = b.getAttribute('data-guess') === 'myth';
+        var ok = b.getAttribute('data-guess') === answer;
         sfx(ok ? 'ok' : 'no');
         $('.myth-result', root).textContent = LF.ui(ok ? 'correct' : 'wrong');
-        writeText($('.myth-text', root), C.myth.text);
+        writeText($('.myth-text', root), card.text);
         root.classList.add('revealed');
       };
     });

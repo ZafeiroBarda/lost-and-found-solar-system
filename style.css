@@ -162,7 +162,8 @@ input[type="text"] {
 .myth-title { font: 700 15px/1.3 var(--mono); text-transform: uppercase; letter-spacing: .08em; margin: 0 0 12px; }
 .myth-quote { font: 600 22px/1.35 var(--serif); margin: 0 0 12px; }
 .myth-text { font-size: 15px; }
-.memo .stamp.red { position: absolute; top: 22px; right: 24px; transform: rotate(8deg); font-size: 18px; }
+.memo .stamp.red, .memo .stamp.myth-verdict { position: absolute; top: 22px; right: 24px; transform: rotate(8deg); font-size: 18px; }
+.myth-count { font: 600 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted-ink, #6b5233); margin: -6px 0 12px; }
 
 /* ---------- stamps, notes, sources ---------- */
 .stamp {
@@ -304,7 +305,7 @@ body.file-open main { display: none; }
 .heli.lift { transform: translateY(-46px); }
 .heli.wobble { animation: shake .5s 2; }
 .heli.shake { animation: shake .2s 5; }
-.rpm-row { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.rpm-row { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; }
 .rpm { width: 100%; accent-color: var(--ink); }
 
 /* Voyager */
@@ -316,9 +317,28 @@ body.file-open main { display: none; }
 .milestone { font-weight: 600; }
 .send-row { margin: 8px 0; }
 
-/* ---------- Archie ---------- */
+/* ---------- Archie Enhanced ---------- */
 .guide { position: fixed; right: 16px; bottom: 16px; z-index: 50; display: flex; align-items: flex-end; gap: 10px; max-width: calc(100vw - 32px); }
-.guide-avatar { width: 66px; height: 66px; border-radius: 50%; background: var(--space-2); border: 2px solid var(--brass); padding: 6px; cursor: pointer; flex: none; }
+.guide-avatar { 
+  width: 66px; 
+  height: 66px; 
+  border-radius: 50%; 
+  background: var(--space-2); 
+  border: 2px solid var(--brass); 
+  padding: 6px; 
+  cursor: pointer; 
+  flex: none;
+  animation: floatAvatar 4s infinite ease-in-out;
+  box-shadow: 0 0 10px rgba(127, 224, 208, 0.2);
+  transition: box-shadow 0.3s ease, scale 0.3s ease, translate 0.3s ease, border-color 0.3s ease;
+}
+.guide-avatar:hover, .guide-avatar:focus-visible {
+  box-shadow: 0 0 20px rgba(127, 224, 208, 0.6);
+  /* scale/translate (not transform) so the hover lift adds to the floatAvatar animation instead of being overridden by it */
+  scale: 1.05;
+  translate: 0 -2px;
+  border-color: var(--focus);
+}
 .guide-avatar .icon { width: 100%; height: 100%; }
 .guide-bubble { background: var(--paper); color: var(--ink); border-radius: 12px; padding: 12px 14px; width: 320px; max-width: calc(100vw - 110px); box-shadow: 0 10px 30px rgba(0, 0, 0, .55); }
 .guide.collapsed .guide-bubble { display: none; }
@@ -327,6 +347,32 @@ body.file-open main { display: none; }
 .guide-buttons { display: flex; gap: 6px; flex-wrap: wrap; }
 .guide-bubble .btn { color: var(--ink); }
 .guide-highlight { outline: 3px solid var(--focus); outline-offset: 6px; border-radius: 10px; }
+
+/* Archie Character Animations */
+@keyframes floatAvatar {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes archieBlink {
+  0%, 46%, 48%, 50%, 100% { transform: scaleY(1); }
+  47%, 49% { transform: scaleY(0.1); }
+}
+
+.icon .eye {
+  transform-origin: 50% 50%;
+  transform-box: fill-box;
+  animation: archieBlink 5s infinite;
+}
+
+@keyframes antennaPulse {
+  0%, 100% { filter: drop-shadow(0 0 1px #e0573f) brightness(1); }
+  50% { filter: drop-shadow(0 0 6px #e0573f) brightness(1.4); }
+}
+
+.icon circle[fill="#e0573f"] {
+  animation: antennaPulse 2s infinite ease-in-out;
+}
 
 /* ---------- photos in the case file ---------- */
 .photo { margin: 16px 0 6px; background: #fff; padding: 8px 8px 10px; box-shadow: 0 6px 14px rgba(0, 0, 0, .25); transform: rotate(.8deg); }
@@ -344,7 +390,7 @@ body.file-open main { display: none; }
     radial-gradient(circle at 40% 60%, rgba(90, 90, 96, .45) 0 15%, transparent 16%),
     radial-gradient(circle at 70% 62%, rgba(90, 90, 96, .4) 0 8%, transparent 9%),
     radial-gradient(circle at 38% 36%, #f4f4f2, #b9b9b6 62%, #7d7d7a);
-  box-shadow: 0 0 0 6px var(--space), 0 0 30px rgba(255, 255, 255, .25);
+  box-shadow: 0 0 0 6px var(--space), 0 0 30px rgba(255, 255, 240, .35);
 }
 .moon-disc.firing { box-shadow: 0 0 0 6px var(--space), 0 0 40px rgba(92, 255, 138, .6); }
 .site { position: absolute; transform: translate(-50%, -50%); background: none; border: 0; padding: 4px; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
@@ -466,6 +512,8 @@ body.file-open main { display: none; }
 .memo.revealed .myth-result { display: block; font-weight: 700; margin: 6px 0 0; }
 .memo.revealed .myth-text { display: block; }
 .memo.revealed .myth-guess { display: none; }
+.memo .myth-next { display: none; margin-top: 12px; color: var(--ink); border-color: var(--ink); font-family: var(--mono); }
+.memo.revealed .myth-next:not([hidden]) { display: inline-block; }
 @keyframes stampin { from { transform: rotate(8deg) scale(2.2); opacity: 0; } to { transform: rotate(8deg) scale(1); opacity: 1; } }
 
 /* ---------- Ingenuity gauge and hold button ---------- */
@@ -516,7 +564,7 @@ body.file-open main { display: none; }
   .viewport { border-width: 9px; }
   .file-name { font-size: 24px; }
   .memo { padding: 22px 18px; }
-  .memo .stamp.red { position: static; margin-bottom: 10px; }
+  .memo .stamp.red, .memo .stamp.myth-verdict { position: static; margin-bottom: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
