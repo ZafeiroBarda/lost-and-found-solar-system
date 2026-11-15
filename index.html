@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Lost & Found: Solar System Branch. A browser game about the machines NASA left on the Moon, on Mars and in deep space. NASA Space Apps 2026, team dancing_with_the_stars.">
+  <meta name="ai-disclosure" content="Made with AI assistance (Claude by Anthropic) for code, text and drawings, checked by the team against the NASA sources. All photos are real NASA images.">
+  <title>Lost &amp; Found</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- All four fonts include Greek letters -->
+  <link href="https://fonts.googleapis.com/css2?family=Cousine:wght@400;700&family=Fira+Sans:wght@400;600;700&family=Literata:opsz,wght@7..72,600;7..72,700&family=Playpen+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- No text is written in this file. Every word comes from content/content.json (built into content.js). -->
+  <script src="content.js"></script>
+  <script src="core.js"></script>
+  <script src="icons.js"></script>
+  <script src="games.js"></script>
+</head>
+<body>
+  <noscript><p>Lost &amp; Found needs JavaScript.</p></noscript>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-title" data-ui="appTitle"></span>
+      <span class="brand-sub mono" data-ui="appSubtitle"></span>
+    </div>
+    <div class="controls">
+      <button type="button" id="sound" class="btn small ghost"></button>
+      <button type="button" id="bell" class="btn small bell" data-ui-attr="aria-label:bell,title:bell"></button>
+    </div>
+  </header>
+
+  <main id="office">
+    <section class="hero">
+      <div class="hero-text">
+        <h1 class="tagline" data-ui="tagline"></h1>
+        <p class="intro" data-ui="intro"></p>
+        <p class="hint mono"><span data-ui="shelvesHint"></span> <span id="progress"></span></p>
+        <p class="hint small-hint" data-ui="windowHint"></p>
+      </div>
+      <div id="viewport" class="viewport"></div>
+    </section>
+
+    <div id="shelves" class="shelves"></div>
+
+    <section id="myth" class="memo"></section>
+
+    <footer class="footer">
+      <p data-ui="footer"></p>
+      <p class="ai-note" data-ui="aiNote"></p>
+      <button type="button" id="open-sources" class="btn small ghost" data-ui="sourcesHeading"></button>
+      <button type="button" id="reset-progress" class="btn small ghost" data-ui="resetProgress"></button>
+      <p id="reset-note" class="ai-note" aria-live="polite"></p>
+    </footer>
+  </main>
+
+  <div id="file-view" class="file-view" hidden role="region"></div>
+
+  <div id="sources" class="sources-overlay" hidden>
+    <div class="sources-sheet" role="dialog" aria-modal="true" aria-labelledby="sources-title">
+      <div class="sources-head">
+        <h2 id="sources-title" data-ui="sourcesHeading"></h2>
+        <button type="button" id="sources-close" class="btn small" data-ui="close"></button>
+      </div>
+      <div id="sources-body"></div>
+    </div>
+  </div>
+
+  <div id="guide" class="guide collapsed">
+    <div class="guide-bubble">
+      <span id="guide-name" class="guide-name"></span>
+      <p id="guide-text" aria-live="polite"></p>
+      <div id="guide-buttons" class="guide-buttons"></div>
+    </div>
+    <button type="button" id="guide-avatar" class="guide-avatar" data-ui-attr="aria-label:bell"></button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
